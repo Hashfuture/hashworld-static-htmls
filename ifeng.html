@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>哈希世界邀请函</title>
+        <meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <style>
+#button {
+    background-image: url(ifeng-button.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: center;
+    height: auto;
+    background-color: rgba(0,0,0,0); border: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+body {
+    position: relative;
+}
+p {
+    color: #EDCA83;
+    font-size: 1rem;
+    font-family: "PingFangSC-Medium";
+    bottom: 168px;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+        </style>
+    </head>
+    <body style="height: 100vh; width: 18.75rem; overflow: hidden; background-color: #15151d; background-image:url(ifeng.png); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 0 auto;">
+        <button id="button" style=""></button>
+        <p>恭喜您获得<span id="amount">&nbsp;&nbsp;&nbsp;&nbsp;</span>HSC≈￥<span id="value">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <script>
+            var button = document.getElementById('button')
+            var adjustBottom = function(designValue, imageHeight, clientHeight) {
+                return (designValue / 667 * imageHeight + (clientHeight - imageHeight) / 2) / clientHeight * 100 + '%'
+            }
+            var adjustRem = function(designValue, imageWidth, clientWidth) {
+                return designValue * imageWidth / clientWidth + 'rem'
+            }
+            function setRootFontSize() {
+                var width = Math.min(screen.width, 480);
+                document.documentElement.style.fontSize = (width / 18.75) + 'px';
+                var height = document.documentElement.clientHeight;
+                var aspectRatio = width / height;
+                var standradAspectRatio = 375 / 667;
+                var imageHeight = height;
+                var imageWidth = width;
+                if (aspectRatio < standradAspectRatio) {
+                    // extra height
+                    imageHeight = width / 375 * 667;
+                } else {
+                    // extra width
+                    imageWidth = height / 667 * 375;
+                    
+                }
+                var buttonWidth = adjustRem(5, imageWidth, width)
+                var buttonBottom = adjustBottom(25, imageHeight, height)
+                button.style.bottom = buttonBottom;
+                button.style.width = buttonWidth;
+                button.style.height = buttonWidth;
+                var p = document.getElementsByTagName('p')[0]
+                p.style.bottom = adjustBottom(164, imageHeight, height)
+                p.style.fontSize = adjustRem(1, imageWidth, width)
+                
+            }
+            window.addEventListener('resize', setRootFontSize);
+            setRootFontSize();
+            button.addEventListener('click', function() {
+                window.location = '/apis/accounts/ifeng_news/signup/' + location.search
+            })
+            var search = location.search;
+            if (search.length > 1) {
+                search = search.substr(1)
+                var query = search
+                    .split('&')
+                    .filter(function(pair) {
+                        var idx = pair.indexOf('=')
+                        return idx !== -1 && idx !== pair.length - 1
+                    })
+                    .reduce(function(previous, current) {
+                        var pair = current.split('=')
+                        previous[pair[0]] = pair[1]
+                        return previous
+                    }, {})
+                var amount = parseFloat(query.hash_coin)
+                if (!isNaN(amount)) {
+                    document.getElementById('amount').innerText = amount + '';
+                    document.getElementById('value').innerText = (amount * 0.035).toFixed(2);
+                }
+            }
+        </script>
+    </body>
+</html>
+
