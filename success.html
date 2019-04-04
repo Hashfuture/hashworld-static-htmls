@@ -12,7 +12,15 @@
             <p style="margin-top: 22px;" id="caption"></p>
         </div>
         <script>
-            caption.innerText = decodeURIComponent(location.search.slice(1)) || '验证成功'
+          function getCaption() {
+            var defaultCaption = '验证成功'
+            var search = location.search.slice(1)
+            if (!search) return defaultCaption
+            var caption = search.split('&').filter(q => q.startsWith('text='))[0]
+            return caption ? caption.slice(5) : defaultCaption
+          }
+          
+          caption.innerText = decodeURIComponent(getCaption())
         </script>
     </body>
 </html>
