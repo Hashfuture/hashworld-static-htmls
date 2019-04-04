@@ -12,8 +12,7 @@
             <p style="margin-top: 22px;" id="caption"></p>
         </div>
         <script>
-            caption.innerText = location.search.slice(1) || '验证成功'
+            caption.innerText = decodeURIComponent(location.search.slice(1)) || '验证成功'
         </script>
     </body>
 </html>
-
